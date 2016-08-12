@@ -10,20 +10,6 @@ Variables   ${CONFIG}
 
 
 *** Keywords ***
-ELS-Website-Login    [Arguments]    ${user}=${ODOO_USER}    ${password}=${ODOO_PASSWORD}    ${db}=${ODOO_DB}
-    Open Browser                        ${ODOO URL}  browser=${BROWSER}
-    Maximize Browser Window
-    Go To                               ${ODOO URL}
-    Set Selenium Speed                  ${SELENIUM_DELAY}
-    Set Selenium Timeout                ${SELENIUM_TIMEOUT}
-    Set Selenium Implicit Wait          ${SELENIUM_TIMEOUT}
-    Wait Until Page Contains Element    name=login
-    Input Text                          name=login  ${user}
-    Input Password                      name=password   ${password}
-    Click Button                        xpath=//div[contains(@class,'oe_login_buttons')]/button[@type='submit']
-    Wait Until Page Contains Element    xpath=//div[contains(@class,'oe_website_sale')]
-
-# checked: 8.0 ok
 Login    [Arguments]    ${user}=${ODOO_USER}    ${password}=${ODOO_PASSWORD}    ${db}=${ODOO_DB}
     Open Browser                        ${ODOO URL}  browser=${BROWSER}
     Maximize Browser Window
@@ -39,26 +25,21 @@ Login    [Arguments]    ${user}=${ODOO_USER}    ${password}=${ODOO_PASSWORD}    
     Click Button                        xpath=//div[contains(@class,'oe_login_buttons')]/button[@type='submit']
     Wait Until Page Contains Element    xpath=//div[@id='oe_main_menu_placeholder']/ul/li/a/span
 
-# checked: 8.0 ok
 DatabaseConnect    [Arguments]    ${odoo_db}=${ODOO_DB}    ${odoo_db_user}=${ODOO_DB_USER}    ${odoo_db_password}=${ODOO_DB_PASSWORD}    ${odoo_db_server}=${SERVER}    ${odoo_db_port}=${ODOO_DB_PORT}
-		Connect To Database Using Custom Params	psycopg2        database='${odoo_db}',user='${odoo_db_user}',password='${odoo_db_password}',host='${odoo_db_server}',port=${odoo_db_port}
+    Connect To Database Using Custom Params	psycopg2        database='${odoo_db}',user='${odoo_db_user}',password='${odoo_db_password}',host='${odoo_db_server}',port=${odoo_db_port}
 
-# checked: 8.0 ok
 DatabaseDisconnect
-		Disconnect from Database
-    
-# checked: 8.0 ok
+    Disconnect from Database
+
 MainMenu    [Arguments]    ${menu}
-	Click Link				xpath=//div[@id='oe_main_menu_placeholder']/ul/li/a[@data-menu='${menu}']
-	Wait Until Page Contains Element	xpath=//div[contains(@class, 'oe_secondary_menus_container')]/div[contains(@class, 'oe_secondary_menu') and not(contains(@style, 'display: none'))]	
-	ElementPostCheck
+    Click Link    xpath=//div[@id='oe_main_menu_placeholder']/ul/li/a[@data-menu='${menu}']
+    Wait Until Page Contains Element    xpath=//div[contains(@class, 'oe_secondary_menus_container')]/div[contains(@class, 'oe_secondary_menu') and not(contains(@style, 'display: none'))]
+    ElementPostCheck
 
-# checked: 8.0 ok
 SubMenu    [Arguments]    ${menu}
-    Click Link				xpath=//td[contains(@class,'oe_leftbar')]//ul/li/a[@data-menu='${menu}']
-    Wait Until Page Contains Element	xpath=//div[contains(@class,'oe_view_manager_body')]
+    Click Link    xpath=//td[contains(@class,'oe_leftbar')]//ul/li/a[@data-menu='${menu}']
+    Wait Until Page Contains Element    xpath=//div[contains(@class,'oe_view_manager_body')]
 
-# checked: 8.0 ok
 ChangeView    [Arguments]    ${view}
    Click Link                          xpath=//div[contains(@class,'openerp')][last()]//ul[contains(@class,'oe_view_manager_switch')]//a[contains(@data-view-type,'${view}')]
    Wait Until Page Contains Element    xpath=//div[contains(@class,'openerp')][last()]//div[contains(@class,'oe_view_manager_view_${view}') and not(contains(@style, 'display: none'))]
@@ -120,7 +101,7 @@ Text    [Arguments]    ${model}    ${field}    ${value}
     Input Text             xpath=//div[contains(@class,'openerp')][last()]//textarea[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']    ${value}
     ElementPostCheck
 
-Select-Option    [Arguments]    ${model}    ${field}    ${value}    
+Select-Option    [Arguments]    ${model}    ${field}    ${value}
     ElementPreCheck        xpath=//div[contains(@class,'openerp')][last()]//select[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']
     Select From List By Label	xpath=//div[contains(@class,'openerp')][last()]//select[@data-bt-testing-model_name='${model}' and @data-bt-testing-name='${field}']    ${value}
     ElementPostCheck
@@ -224,11 +205,11 @@ MainWindowSearchTextField   [Arguments]     ${field}    ${value}
     ElementPostCheck
 
 MainWindowSearchNow
-    
+
 MainWindowMany2One          [Arguments]     ${field}    ${value}
     Click Element           xpath=//td[contains(@class, 'view-manager-main-content')]//input[@name='${field}']  don't wait
     Input Text              xpath=//td[contains(@class, 'view-manager-main-content')]//input[@name='${field}']      ${value}
     Click Element           xpath=//td[contains(@class, 'view-manager-main-content')]//input[@name='${field}']/following-sibling::span[contains(@class, 'oe-m2o-drop-down-button')]/img don't wait
     Click Link              xpath=//ul[contains(@class, 'ui-autocomplete') and not(contains(@style, 'display: none'))]//a[self::*/text()='${value}']    don't wait
     ElementPostCheck
-    
+
